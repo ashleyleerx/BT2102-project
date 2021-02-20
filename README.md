@@ -17,7 +17,8 @@ python manage.py runserver
 __BackEnd Component__ 
 - DB_Connect.py -- Contains the engine to connect to mySQL Database 
 - DB_Password.py -- Contains your own mySQL password 
-- Login.py -- Contains User Creation, User Login, AdminUser Creation and AdminUser Login  
+- Login.py -- Contains User Creation, User Login
+- AdminLogin.py -- Contains AdminUser Creation, AdminUserLogin 
 
 
 __FrontEnd Component__ 
