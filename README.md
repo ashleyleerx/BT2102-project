@@ -1,5 +1,7 @@
 # BTProject
 
+_Optional Component_ 
+
 Setting up of Python virtual environment 
 - pip install virtualenvwrapper-win 
 - mkvirtualenv name_of_test_env
@@ -11,3 +13,12 @@ entered virtual environment when name of virtual env in brackets
 See https://www.youtube.com/watch?v=OTmQOjsl0eg&ab_channel=Telusko if unsure 
  
 python manage.py runserver
+
+__BackEnd Component__ 
+DB_Connect.py -- Contains the engine to connect to mySQL Database 
+DB_Password.py -- Contains your own mySQL password 
+Login.py -- Contains User Creation, User Login, AdminUser Creation and AdminUser Login  
+
+
+__FrontEnd Component__ 
+Done with Tkinter 
