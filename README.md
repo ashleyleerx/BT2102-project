@@ -14,12 +14,15 @@ See https://www.youtube.com/watch?v=OTmQOjsl0eg&ab_channel=Telusko if unsure
  
 python manage.py runserver
 
+<p>&nbsp;</p>
+
 __Necessary Python Modules__ 
 - pandas 
 - numpy
 - sqlalchemy
 - pymongo
-- 
+
+<p>&nbsp;</p>
 
 __BackEnd Component__ 
 - DB_Connect.py -- Contains the engine to connect to mySQL Database 
@@ -27,6 +30,7 @@ __BackEnd Component__
 - Login.py -- Contains User Creation, User Login
 - AdminLogin.py -- Contains AdminUser Creation, AdminUserLogin 
 
+<p>&nbsp;</p>
 
 __FrontEnd Component__ 
 - Done with Tkinter 
