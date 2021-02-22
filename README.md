@@ -14,6 +14,13 @@ See https://www.youtube.com/watch?v=OTmQOjsl0eg&ab_channel=Telusko if unsure
  
 python manage.py runserver
 
+__Necessary Python Modules__ 
+- pandas 
+- numpy
+- sqlalchemy
+- pymongo
+- 
+
 __BackEnd Component__ 
 - DB_Connect.py -- Contains the engine to connect to mySQL Database 
 - DB_Password.py -- Contains your own mySQL password 
