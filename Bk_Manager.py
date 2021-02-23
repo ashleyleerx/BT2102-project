@@ -5,7 +5,7 @@ connection = connect.db.connect()
 def result(stmt):
     return connection.execute(stmt).fetchall()[0][0]
 
-def ExtendBorrowing(bookID, memberID):
+def extend_borrowing(bookID, memberID):
     borrowerID = result("SELECT borrowMemberID FROM book WHERE bookID = {}".format(bookID))
     reserverID = result("SELECT reserveMemberID FROM book WHERE bookID = {}".format(bookID))
     if borrowerID == memberID and reserverID == None:
@@ -16,7 +16,7 @@ def ExtendBorrowing(bookID, memberID):
     else:
         return "You have not borrowed this book."
 
-def CancelReservation(bookID, memberID):
+def cancel_reservation(bookID, memberID):
     borrowerID = result("SELECT borrowMemberID FROM book WHERE bookID = {}".format(bookID))
     reserverID = result("SELECT reserveMemberID FROM book WHERE bookID = {}".format(bookID))
     if reserverID == memberID:
@@ -29,7 +29,7 @@ def CancelReservation(bookID, memberID):
         return "Your reservation has been cancelled."
     return "You do not have a reservation for this book."
 
-def ReturnBook(bookID, memberID):
+def return_book(bookID, memberID):
     borrowerID = result("SELECT borrowMemberID FROM book WHERE bookID = {}".format(bookID))
     if borrowerID == memberID:
         update_stmt = "UPDATE book SET borrowMemberID = NULL, dateDue = NULL WHERE bookID = {}".format(bookID)
