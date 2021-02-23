@@ -127,8 +127,8 @@ List of options for Filter:
     - "ISBN"  -- should take in a string, and only can be 1 ISBN (i.e. cannot do something like "193518217X, 1933988509")
     - "PageCount" -- should take in an integer or string of NUMBERS
     - "PublishedDate" -- should take in datetime object
-    - "Category" -- should take in a string of 1 + category/categories
-    - "Author" -- should take in a string of 1 + author/authors
+    - "Categories" -- should take in a string of 1 + category/categories
+    - "Authors" -- should take in a string of 1 + author/authors
 
 Extra param only applies for Pagecount, PublishedDate,
 '''
@@ -194,14 +194,14 @@ def advance_search(search_words, filt, *extra_param):
             adv_helper(match_dict, b)
         return match_dict
 
-    # advanced search for category
-    elif filt == "category":
+    # advanced search for categories
+    elif filt == "categories":
         for b in mongo_output(connect.collection.find({"categories": {"$elemMatch": {"$regex": search_words, "$options": 'i'}}})):
             adv_helper(match_dict, b)
         return match_dict
 
-    # advanced search for author
-    elif filt == "author":
+    # advanced search for authors
+    elif filt == "authors":
         for b in mongo_output(connect.collection.find({"authors": {"$elemMatch": {"$regex": search_words, "$options": 'i'}}})):
             adv_helper(match_dict, b)
         return match_dict
@@ -213,7 +213,7 @@ def advance_search(search_words, filt, *extra_param):
 # print(simple_search("flex on java"))
 # print(book_df.loc[book_df["bookID"] == 777])
 # print(advance_search(dt.datetime(2010, 11, 15, 8), "publisheddate", "equal"))
-#print(advance_search("java", "category"))
+#print(similarity_sort(advance_search("Steve L", "authors"), "Steve L", "authors"))
 # congo = connect.collection.find({})
 # for b in congo:
 #     print(b.keys())
@@ -227,3 +227,4 @@ def advance_search(search_words, filt, *extra_param):
 # print(type(bookinfo["borrowMemberID"]))
 # if bookinfo["bookID"] == 77:
 #     print(bookinfo)
+
