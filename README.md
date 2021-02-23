@@ -21,14 +21,16 @@ __Necessary Python Modules__
 - numpy
 - sqlalchemy
 - pymongo
+- datetime 
 
 <p>&nbsp;</p>
 
 __BackEnd Component__ 
-- DB_Connect.py -- Contains the engine to connect to mySQL Database 
+- DB_Connect.py -- Contains the engine to connect to mySQL Database and MongoDB
 - DB_Password.py -- Contains your own mySQL password 
 - Login.py -- Contains User Creation, User Login
 - AdminLogin.py -- Contains AdminUser Creation, AdminUserLogin 
+- BkSearch.py -- Contains simple and advanced search functionalities (also has similarity sort functionality) 
 
 <p>&nbsp;</p>
 
