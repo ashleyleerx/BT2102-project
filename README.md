@@ -31,6 +31,7 @@ __BackEnd Component__
 - Login.py -- Contains User Creation, User Login
 - AdminLogin.py -- Contains AdminUser Creation, AdminUserLogin 
 - BkSearch.py -- Contains simple and advanced search functionalities (also has similarity sort functionality) 
+- Bk_Manager.py -- Contains ExtendBorrowing, CancelReservation, ReturnBook 
 
 <p>&nbsp;</p>
 
