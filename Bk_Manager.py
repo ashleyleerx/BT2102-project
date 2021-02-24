@@ -8,11 +8,13 @@ def result(stmt):
 def extend_borrowing(bookID, memberID):
     borrowerID = result("SELECT borrowMemberID FROM book WHERE bookID = {}".format(bookID))
     reserverID = result("SELECT reserveMemberID FROM book WHERE bookID = {}".format(bookID))
-    if borrowerID == memberID and reserverID == None:
-        update_stmt = "UPDATE book SET dateDue = DATE_ADD(dateDue, INTERVAL 4 WEEK) WHERE bookID = {}".format(bookID)
-        connection.execute(update_stmt)
-        newDueDate = result('SELECT dateDue FROM book WHERE bookID = {}'.format(bookID))
-        return "Your due date has been extended by 4 weeks to {}.".format(newDueDate)
+    if borrowerID == memberID:
+        if reserverID == None:
+            update_stmt = "UPDATE book SET dateDue = DATE_ADD(dateDue, INTERVAL 4 WEEK) WHERE bookID = {}".format(bookID)
+            connection.execute(update_stmt)
+            newDueDate = result('SELECT dateDue FROM book WHERE bookID = {}'.format(bookID))
+            return "Your due date has been extended by 4 weeks to {}.".format(newDueDate)
+        return "This book is reserved. No extension of due date."
     else:
         return "You have not borrowed this book."
 
