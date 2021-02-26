@@ -2,9 +2,11 @@ import DB_Connect as connect
 
 connection = connect.db.connect()
 
+# Returns a value from the SQL database.
 def result(stmt):
     return connection.execute(stmt).fetchall()[0][0]
 
+# Extends borrowing by 4 weeks provided the book has not been reserved.
 def extend_borrowing(bookID, memberID):
     borrowerID = result("SELECT borrowMemberID FROM book WHERE bookID = {}".format(bookID))
     reserverID = result("SELECT reserveMemberID FROM book WHERE bookID = {}".format(bookID))
