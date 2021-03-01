@@ -1,4 +1,5 @@
-import DB_Connect as connect  
+import DB_Connect as connect 
+import bookborrow as borrow
 
 connection = connect.db.connect()
 
@@ -29,7 +30,7 @@ def cancel_reservation(bookID, memberID):
         if borrowerID == None:
             response = input("The book is available for borrowing. Would you like to borrow?\n")
             if response == "Yes":
-                return "XXX" #link up with Borrowing function 
+                return borrow.borrow_book(bookID, memberID)
         return "Your reservation has been cancelled."
     return "You do not have a reservation for this book."
 
