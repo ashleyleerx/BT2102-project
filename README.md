@@ -33,6 +33,7 @@ __BackEnd Component__
 - BkSearch.py -- Contains simple and advanced search functionalities (also has similarity sort functionality) 
 - Bk_Manager.py -- Contains extend_borrowing, cancel_reservation, return_book 
 - FP_Manager.py -- Contains new_fine, update_fine, make_payment. Contains checking boolean functions no_unpaid_fine and returned_overduebks
+- bookborrow.py -- Contains borrow_book and reserve_book
 
 <p>&nbsp;</p>
 
