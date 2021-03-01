@@ -1,5 +1,6 @@
 import DB_Connect as connect
 import pandas as pd
+from FP_Manager import no_unpaid_fine
 
 connection = connect.db.connect()
 db = connect.db
@@ -12,11 +13,6 @@ def is_borrowed(book_id):
         return False
     else:
         return True
-
-def no_unpaid_fine(memberID):
-    query_stmt = "SELECT * FROM fine WHERE paymentDate IS NULL AND memberID = \"{}\"".format(memberID)
-    unpaid_fine_df = pd.read_sql_query(query_stmt, connect.db)
-    return unpaid_fine_df.empty
 
 def borrow_book(book_id, member_id):
 
