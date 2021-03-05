@@ -1,1 +1,0 @@
-password = "GmySQL_8"
