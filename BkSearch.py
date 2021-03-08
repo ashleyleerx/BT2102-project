@@ -21,9 +21,15 @@ def mongo_output(cursor):
 
 
 def formatter(search_words):
+    punct = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
     if type(search_words) == str:
-        search_words = search_words.split(" ")
-    return search_words
+        new_search_words = ""
+        for c in search_words:
+            if c not in punct:
+                new_search_words += c
+
+        new_search_words = new_search_words.split(" ")
+    return new_search_words
 
 
 # MongoDB Reader Function
