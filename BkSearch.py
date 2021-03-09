@@ -20,6 +20,7 @@ def mongo_output(cursor):
 # Splits the search_words string into diff elements in list form
 
 
+# Formatter should return a list
 def formatter(search_words):
     punct = '''!()-[]{};:'"\,<>./?@#$%^&*_~'''
     if type(search_words) == str:
@@ -27,9 +28,9 @@ def formatter(search_words):
         for c in search_words:
             if c not in punct:
                 new_search_words += c
-
         new_search_words = new_search_words.split(" ")
-    return new_search_words
+        return new_search_words
+    return search_words
 
 
 # MongoDB Reader Function
@@ -81,7 +82,7 @@ def simple_search(search_words):
         for index, row in book_df.iterrows():
             # looping through indiv word in booktitle
             for title_indiv_word in formatter(row["bookTitle"].lower()):
-                if word.lower() == title_indiv_word:
+                if word.lower() in title_indiv_word:
                     if row["borrowMemberID"] == None:
                         if row["reserveMemberID"] == None:
                             # Book not borrowed and not reserved
@@ -144,7 +145,7 @@ List of options for Filter:
     - "Categories" -- should take in a string of 1 + category/categories
     - "Authors" -- should take in a string of 1 + author/authors
 
-Extra param only applies for Pagecount, PublishedDate,
+Extra param only applies for Pagecount, PublishedDate
 '''
 
 
@@ -210,14 +211,18 @@ def advance_search(search_words, filt, *extra_param):
 
     # advanced search for categories
     elif filt == "categories":
-        for b in mongo_output(connect.collection.find({"categories": {"$elemMatch": {"$regex": search_words, "$options": 'i'}}})):
-            adv_helper(match_dict, b)
+        search_list = formatter(search_words)
+        for word in search_list:
+            for b in mongo_output(connect.collection.find({"categories": {"$elemMatch": {"$regex": word, "$options": 'i'}}})):
+                adv_helper(match_dict, b)
         return match_dict
 
     # advanced search for authors
     elif filt == "authors":
-        for b in mongo_output(connect.collection.find({"authors": {"$elemMatch": {"$regex": search_words, "$options": 'i'}}})):
-            adv_helper(match_dict, b)
+        search_list = formatter(search_words)
+        for word in search_list:
+            for b in mongo_output(connect.collection.find({"authors": {"$elemMatch": {"$regex": word, "$options": 'i'}}})):
+                adv_helper(match_dict, b)
         return match_dict
 
     else:
@@ -227,7 +232,7 @@ def advance_search(search_words, filt, *extra_param):
 # print(simple_search("flex on java"))
 # print(book_df.loc[book_df["bookID"] == 777])
 # print(advance_search(dt.datetime(2010, 11, 15, 8), "publisheddate", "equal"))
-#print(similarity_sort(advance_search("Steve L", "authors"), "Steve L", "authors"))
+#print(similarity_sort(advance_search(["kyle", "brun"],"authors"), ["kyle", "brun"], "authors"))
 # congo = connect.collection.find({})
 # for b in congo:
 #     print(b.keys())
@@ -242,4 +247,7 @@ def advance_search(search_words, filt, *extra_param):
 # if bookinfo["bookID"] == 77:
 #     print(bookinfo)
 
-print(similarity_sort(simple_search("Android"), "Android", "title"))
+#print(similarity_sort(simple_search("Android"), "Android", "title"))
+
+
+# Note to self: Should the date due for books be visible to clients?
