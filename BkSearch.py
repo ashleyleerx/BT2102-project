@@ -86,16 +86,20 @@ def simple_search(search_words):
                         if row["reserveMemberID"] == None:
                             # Book not borrowed and not reserved
                             match_dict[row["bookID"]] = [
-                                row["bookTitle"], "Available"]
+                                row["bookTitle"], "Available", "Not Reserved", "NIL"]
                         else:
                             # Book not borrowed but is reserved
                             match_dict[row["bookID"]] = [
-                                row["bookTitle"], "Reserved"]
+                                row["bookTitle"], "Available", "Reserved", "NIL"]
                     else:
-                        # Both ways (either borrowed but not reserved OR borrowed and reserved)
-                        # the book is not available and therefore a simple "Not Available" reference should suffice
-                        match_dict[row["bookID"]] = [
-                            row["bookTitle"], "Not Available", row["dateDue"]]
+                        if row["reserveMemberID"] == None:
+                            # Book borrowed and not reserved
+                            match_dict[row["bookID"]] = [
+                                row["bookTitle"], "On Loan", "Not Reserved", row["dateDue"]]
+                        else:
+                            # Book borrowed but is reserved
+                            match_dict[row["bookID"]] = [
+                                row["bookTitle"], "On Loan", "Reserved", row["dateDue"]]
     return match_dict
 
 
@@ -114,16 +118,20 @@ def adv_helper(match_dict, b):
                 if row["reserveMemberID"] == None:
                     # Book not borrowed and not reserved
                     match_dict[row["bookID"]] = [
-                        row["bookTitle"], "Available"]
+                        row["bookTitle"], "Available", "Not Reserved", "NIL"]
                 else:
                     # Book not borrowed but is reserved
                     match_dict[row["bookID"]] = [
-                        row["bookTitle"], "Reserved"]
+                        row["bookTitle"], "Available", "Reserved", "NIL"]
             else:
-                # Both ways (either borrowed but not reserved OR borrowed and reserved)
-                # the book is not available and therefore a simple "Not Available" reference should suffice
-                match_dict[row["bookID"]] = [
-                    row["bookTitle"], "Not Available", row["dateDue"]]
+                if row["reserveMemberID"] == None:
+                    # Book borrowed and not reserved
+                    match_dict[row["bookID"]] = [
+                        row["bookTitle"], "On Loan", "Not Reserved", row["dateDue"]]
+                else:
+                    # Book borrowed but is reserved
+                    match_dict[row["bookID"]] = [
+                        row["bookTitle"], "On Loan", "Reserved", row["dateDue"]]
     return match_dict
 
 
@@ -234,3 +242,4 @@ def advance_search(search_words, filt, *extra_param):
 # if bookinfo["bookID"] == 77:
 #     print(bookinfo)
 
+print(similarity_sort(simple_search("Android"), "Android", "title"))
