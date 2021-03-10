@@ -31,13 +31,13 @@ def member_view_bksreserved(memberID):
     query_stmt += "WHERE reserveMemberID = \"{}\" ORDER BY bookID".format(memberID)
     return pd.read_sql_query(query_stmt, connect.db)
 
-def member_view_finesOwed(memberID):
+def member_view_unpaidfines(memberID):
     query_stmt = "SELECT fineDate, fineAmount FROM fine "
     query_stmt += "WHERE memberID = \"{}\" AND paymentDate IS NULL ORDER BY fineDate".format(memberID)
     return pd.read_sql_query(query_stmt, connect.db)
 
 # Returns a string representation of the total fine amount owed by the member. 
-def member_view_totalfineAmount(memberID):
+def member_view_totalfineamount(memberID):
     query_stmt = "SELECT SUM(fineAmount) AS totalFineAmountOwed FROM fine "
     query_stmt += "WHERE memberID = \"{}\" AND paymentDate IS NULL GROUP BY memberID".format(memberID)
     amount = pd.read_sql_query(query_stmt, connect.db)
