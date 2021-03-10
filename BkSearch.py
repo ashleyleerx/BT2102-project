@@ -165,7 +165,7 @@ def advance_search(search_words, filt, *extra_param):
 
     # advanced searching by pageCount: can either choose books with lesser page_count or greater page_count or equal page_count
     elif filt == "pagecount":
-        nrpages = int(search_words)
+        nrpages = search_words
 
         # Returns books with pages equal to or lesser than specified amount
         if extra_param[0] == "lesser":
@@ -184,30 +184,36 @@ def advance_search(search_words, filt, *extra_param):
 
         for b in mongo_output(connect.collection.find({"pageCount": {"{}".format(ep): nrpages}})):
             adv_helper(match_dict, b)
-        return match_dict
+        df = pd.DataFrame.from_dict(match_dict, orient="index")
+        return df
 
-    # advanced searching by publication date
+    # advanced searching by publication year
     elif filt == "publisheddate":
+        year = search_words
+        datetime_object = dt.datetime(year, 12, 31)
 
-        # Returns entries with publication date before or on specified date
+        # Returns entries with publication year on or before
         if extra_param[0] == "before":
-            ep = "$lte"
+            for b in mongo_output(connect.collection.find({"publishedDate": {"{}".format("$lte"): datetime_object}})):
+                adv_helper(match_dict, b)
 
-        # Returns entries with publication date after or on specified date
+        # Returns entries with publication year on or after
         elif extra_param[0] == "after":
-            ep = "$gte"
+            for b in mongo_output(connect.collection.find({"publishedDate": {"{}".format("$gte"): datetime_object}})):
+                adv_helper(match_dict, b)
 
-        # Returns entries with publication date exactly on specified date
-        # Note for datetime equals that timezone matters (e.g. dt.datetime(2010,11,15) != dt.datetime(2010,11,15,8))
+        # Returns entries with same publication year
         elif extra_param[0] == "equal":
-            ep = "$eq"
+            first = datetime_object = dt.datetime(year, 1, 1)
+            last = datetime_object = dt.datetime(year, 12, 31)
+            for b in mongo_output(connect.collection.find({"publishedDate": {"$gte": first, "$lte": last}})):
+                adv_helper(match_dict, b)
 
         else:
-            return "Give either lesser, greater or equal in the extra_param section"
+            return "Give either before, after or equal in the extra_param section"
 
-        for b in mongo_output(connect.collection.find({"publishedDate": {"{}".format(ep): search_words}})):
-            adv_helper(match_dict, b)
-        return match_dict
+        df = pd.DataFrame.from_dict(match_dict, orient="index")
+        return df
 
     # advanced search for categories
     elif filt == "categories":
@@ -232,7 +238,7 @@ def advance_search(search_words, filt, *extra_param):
 # print(simple_search("flex on java"))
 # print(book_df.loc[book_df["bookID"] == 777])
 # print(advance_search(dt.datetime(2010, 11, 15, 8), "publisheddate", "equal"))
-#print(similarity_sort(advance_search(["kyle", "brun"],"authors"), ["kyle", "brun"], "authors"))
+# print(similarity_sort(advance_search(["kyle", "brun"],"authors"), ["kyle", "brun"], "authors"))
 # congo = connect.collection.find({})
 # for b in congo:
 #     print(b.keys())
@@ -247,7 +253,14 @@ def advance_search(search_words, filt, *extra_param):
 # if bookinfo["bookID"] == 77:
 #     print(bookinfo)
 
-#print(similarity_sort(simple_search("Android"), "Android", "title"))
+# print(similarity_sort(simple_search("Android"), "Android", "title").values.tolist())
+# search_df = similarity_sort(simple_search("Android"), "Android", "title")
+# for index, row in search_df.iterrows():
+#     print(row[0])
+
+# print(advance_search(dt.datetime(2010, 11, 15, 8), 'publisheddate', "before"))
 
 
 # Note to self: Should the date due for books be visible to clients?
+
+#print(advance_search(2009, "publisheddate", "before"))
