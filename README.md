@@ -34,6 +34,7 @@ __BackEnd Component__
 - Bk_Manager.py -- Contains extend_borrowing, cancel_reservation, return_book 
 - FP_Manager.py -- Contains new_fine, update_fine, make_payment. Contains checking boolean functions no_unpaid_fine and returned_overduebks
 - bookborrow.py -- Contains borrow_book and reserve_book
+- GetViews.py -- Contains admin/member_view_bksborrowed, admin/member_view_bksreserved, admin/member_view_unpaidfines, admin/member_view_totalfineamount
 
 <p>&nbsp;</p>
 
