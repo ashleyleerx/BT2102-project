@@ -15,6 +15,12 @@ def create_header(parent,username):
                         width=20,height=2)
     lbl_user.grid(row=0, column=0, padx=5,pady=10, sticky="nsw")
     
+    ##2. Saerch Button
+    btn_search = tk.Button(master=frm_header_bar, height=2, width=15,
+                           text="Search",
+                           command = logout)
+    btn_search.grid(row=0, column=2, padx=5, pady=10, sticky="nse")    
+    
     ##3. Logout Button
     btn_logout = tk.Button(master=frm_header_bar, height=2, width=15,
                            text="Logout",
