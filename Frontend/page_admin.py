@@ -66,7 +66,7 @@ class AdminPage(tk.Frame):
         tv.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         ## Configure Treeview ##
-        HEADINGS = ('Book ID', 'Book Title', 'Borrow Member ID', 'Duedate')
+        HEADINGS = ('Book ID', 'Book Title', 'Borrow Member ID', 'Due Date')
         tv['columns'] = HEADINGS
         tv["show"] = "headings"  # supresses icon(#0) column
         # tv.heading("#0", text='Sources', anchor='w')
@@ -157,7 +157,7 @@ class AdminPage(tk.Frame):
         ##Fines Title##
         frm_fines = tk.Frame(master=frm_content, borderwidth=1, bg="pink")
         lbl_center = tk.Label(master=frm_fines,
-                              text="Fines", bg="pink")
+                              text="Fines owed", bg="pink")
         lbl_center.pack(fill=tk.BOTH, padx=10, pady=10, expand=True)
         # Add to layout
         frm_fines.grid(
