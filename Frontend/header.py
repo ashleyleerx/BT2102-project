@@ -6,7 +6,7 @@ HEADER_BG = "grey60"
 def create_header(parent,username):
     frm_header_bar = tk.Frame(master=parent, bg = HEADER_BG)
     #Header bar is 1x3 grid
-    for c in range(3):
+    for c in range(4):
         frm_header_bar.columnconfigure(c, weight=1)
     
     ## 1. Username Display 
@@ -18,18 +18,22 @@ def create_header(parent,username):
     ##2. Saerch Button
     btn_search = tk.Button(master=frm_header_bar, height=2, width=15,
                            text="Search",
-                           command = logout)
+                           command = search)
     btn_search.grid(row=0, column=2, padx=5, pady=10, sticky="nse")    
     
     ##3. Logout Button
     btn_logout = tk.Button(master=frm_header_bar, height=2, width=15,
                            text="Logout",
                            command = logout)
-    btn_logout.grid(row=0, column=2, padx=5, pady=10, sticky="nse")
+    btn_logout.grid(row=0, column=3, padx=5, pady=10, sticky="nse")
 
     return frm_header_bar
 
 def logout():
     #TODO: handle logout
+    pass
+
+def search():
+    #TODO: go to search page
     pass
 
