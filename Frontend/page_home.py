@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk #we will use this later on...
 
-
+from datetime import datetime
 
 
 import Bk_Manager as bk
@@ -21,13 +21,13 @@ class HomePage(tk.Frame):
         self.user_fines = tk.DoubleVar()
         #Get total fines
         self.user_fines.set(gv.member_view_totalfineamount(self.session_username.get()))
-        self.search_text = tk.StringVar(value="Search Catalogue") 
+        self.search_text = tk.StringVar(value="Search Catalogue")
         
         ### DEVELOPMENT ONLY ###
         self.session_username.set("danielpo") 
         self.user_fines.set(gv.member_view_totalfineamount(self.session_username.get()))        
         self.create_widgets()
-        print(self.user_fines.get())
+    
 
       
     def create_widgets(self):
@@ -146,7 +146,16 @@ class HomePage(tk.Frame):
             due_date = tk.Label(master=new_frame,text=row[2], width = 10, font=('', 15))
             due_date.grid(row=1,column=1)
             
-            if bb.is_reserved(row[0]):
+            #check if book is late
+            date = str(row[2])
+            date = datetime.strptime(date, "%Y-%m-%d")
+            current = datetime.now()
+            
+            #extend button
+            if date.date() <= current.date():
+                cancel = tk.Label(master=new_frame,text="Late", foreground = "red", width = 10, font=('', 15))
+                cancel.grid(row=1,column=2)        
+            elif bb.is_reserved(row[0]):
                 cancel = tk.Label(master=new_frame,text="No Extension", foreground = "red", width = 10, font=('', 15))
                 cancel.grid(row=1,column=2)
             else:
@@ -252,7 +261,7 @@ class HomePage(tk.Frame):
             due_date = tk.Label(master=new_frame,text=gv.get_new_due_date(row[0]), width = 10, font=('', 15))
             due_date.grid(row=1,column=1)
             
-            if bb.is_max_book(row[0]):
+            if bb.is_reserved(row[0]):
                 cancel = tk.Label(master=new_frame,text="No Extension", foreground = "red", width = 10, font=('', 15))
                 cancel.grid(row=1,column=2)
             else:
