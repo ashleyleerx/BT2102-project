@@ -1,5 +1,5 @@
 import tkinter as tk
-#from login import check_credential, create_account
+from login import check_credential, create_account
 
 class RegisterPage(tk.Frame): 
     def __init__(self, parent, controller):
@@ -90,12 +90,9 @@ class RegisterPage(tk.Frame):
     
     def doRegister(self,username,password):
         #Check credentials
-        #status = check_credential(username,password)
-        status = 3
-        
+        status = check_credential(username,password)
         if status == 3: #account does not exist, create
-            #rsp = create_account(username,password)
-            rsp = "Success. New User Created!"
+            rsp = create_account(username,password)
             if rsp == "Success. New User Created!":
                 self.lbl_msg_disp.config(text="Account Sucessfully Created \nPlease Login",fg="green")
                 self.master.after(1500,self.destroy)

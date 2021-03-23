@@ -1,9 +1,11 @@
 import tkinter as tk
 from tkinter import ttk 
+import time
 
-#from login import check_credential
+from login import check_credential
 from page_register import RegisterPage
-from page_admin import AdminLoginPage
+from page_admin_login import AdminLoginPage
+from page_main import MainPage
     
 class LoginPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -12,14 +14,10 @@ class LoginPage(tk.Frame):
         #Session Variables
         self.session_username = tk.StringVar()
         self.session_password = tk.StringVar()
-        #Register Variables
-        self.session_register = tk.StringVar()
-        
-        #Window
-        self.newRegisterWindow = None
         
         #Populate window with widgets
         self.create_widgets()
+        self.refresh()
           
     def create_widgets(self):
         """
@@ -59,7 +57,7 @@ class LoginPage(tk.Frame):
         ent_login_password.pack()  
         
         ## Message display ## - Create but do not grid yet
-        self.lbl_msg_display = tk.Label(frm_login, text= "", bg="red")
+        self.lbl_msg_display = tk.Label(frm_login, text= "")
         
         #Login Button
         self.btn_login = tk.Button(frm_content, text="Login",width=10,height=1, borderwidth=2, 
@@ -89,8 +87,18 @@ class LoginPage(tk.Frame):
                                  command=self.on_admin_btn_press)
         btn_adm.grid(row=1,column=1)
     
-    
     ### UI EVENT HANDLERS ###
+    def refresh(self):
+        # Windowing
+        self.controller.geometry('400x400')
+        self.controller.minsize(300,300)
+        # Widget Settings
+        if (self.lbl_msg_display.winfo_ismapped()):
+            self.lbl_msg_display.pack_forget()
+            self.btn_login.pack_configure(pady=(15,0))
+        self.session_username.set("")
+        self.session_password.set("")
+    
     def on_login_btn_press(self):
         if (not self.lbl_msg_display.winfo_ismapped()):
             self.lbl_msg_display.pack(pady=(5,0))
@@ -110,7 +118,7 @@ class LoginPage(tk.Frame):
         nextPage.tkraise()
         
     def on_admin_btn_press(self):
-        nextPage = AdminLoginPage(self.parent,self.controller)
+        nextPage = AdminLoginPage(self,self.parent,self.controller)
         nextPage.grid(row = 0, column = 0, sticky ="nsew")
         nextPage.tkraise()
             
@@ -133,15 +141,13 @@ class LoginPage(tk.Frame):
         usr_n, pw = self.session_username.get(), self.session_password.get()
         
         # Calls backend method - returns an integer 
-        #status = check_credential(usr_n,pw)
-        
-        """ TESTING ONLY """
-        status = 1
-        
+        status = check_credential(usr_n,pw)
+       
         ## Update Page based on status ##
         login_ok = False 
         if status == 1: #ID and password match, Login ok
             self.lbl_msg_display.config(text="Login Sucessful", fg = "green")
+            
             login_ok = True
         elif status == 2: #ID match but wrong password
             self.lbl_msg_display.config(text="Incorrect Password. Please Try Again", fg = "red")
@@ -149,22 +155,27 @@ class LoginPage(tk.Frame):
             self.lbl_msg_display.config(text="Invalid Username. Please Try Again", fg = "red")
         
         ## Process Sucessful Login ##
-        #TODO: 
-        if login_ok: 
-            pass
-        # SIMPLE METHOD OF SETTING - PROBABLY NOT THE BEST SECURITY WISE #
-        #nextPage = self.controller.PAGES[1]
-        #self.controller.show_frame(nextPage)
+        if login_ok:
+            self.user_data = {"userId":usr_n}
+            self.controller.after(1500,self.load_main_page)
+            
+            
+    def load_main_page(self):
+        nextPage = MainPage(self,self.parent, self.controller,self.user_data)
+        nextPage.grid(row = 0, column = 0, sticky ="nsew")
+        nextPage.tkraise()
             
 ## DEBUG USE ONLY ###
-root = tk.Tk()
-root.geometry('400x400')
-root.minsize(300,300)
-container = tk.Frame(root)
-container.pack(side = "top", fill = "both", expand = True) 
-container.grid_rowconfigure(0, weight = 1)
-container.grid_columnconfigure(0, weight = 1)
-frame = LoginPage(container,root)
-frame.grid(row = 0, column = 0, sticky ="nsew")
-frame.tkraise()
-root.mainloop()  
+if __name__ == '__main__':
+    root = tk.Tk()
+
+    container = tk.Frame(root)
+    container.pack(side = "top", fill = "both", expand = True) 
+    container.grid_rowconfigure(0, weight = 1)
+    container.grid_columnconfigure(0, weight = 1)
+
+    frame = LoginPage(container,root)
+    frame.grid(row = 0, column = 0, sticky ="nsew")
+    frame.tkraise()
+
+    root.mainloop()  

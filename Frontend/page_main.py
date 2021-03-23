@@ -10,9 +10,9 @@ from page_searchdisplay import SearchDisplay
 from page_payment import PaymentPage
 
 class MainPage(tk.Frame):    
-    def __init__(self, parent, controller, session_user_data):
+    def __init__(self, prev, parent, controller, session_user_data):
         super().__init__(parent)
-        self.parent, self.controller = parent, controller
+        self.prev, self.parent, self.controller = prev,parent,controller
         #Set screen size etc
         controller.title("Library Application")
         controller.geometry("600x600")
@@ -53,7 +53,7 @@ class MainPage(tk.Frame):
         lbl_user.pack(side=tk.LEFT,padx=(10,0),pady=5)
         
         ## Logout Button ##
-        btn_logout = tk.Button(master=frm_top_row,padx=10,
+        btn_logout = tk.Button(master=frm_top_row,padx=10,bg=HEADER_BTN,
                             text="Logout", command = self.on_logout_btn_press)
         btn_logout.pack(side=tk.RIGHT,padx=(0,10),pady=5)
 
@@ -106,7 +106,8 @@ class MainPage(tk.Frame):
         
     def on_logout_btn_press(self):
         #TODO: handle logout
-        self.controller.destroy()
+        self.destroy()
+        self.prev.refresh()
 
 if __name__ == '__main__':
     root = tk.Tk()
@@ -119,7 +120,7 @@ if __name__ == '__main__':
 
     test_user = {"userId":"henrychia07"}
 
-    frm_header_bar = MainPage(container,root,test_user)
+    frm_header_bar = MainPage(None,container,root,test_user)
     frm_header_bar.grid(row=0, column=0, sticky="nsew")
     root.mainloop()  
 

@@ -1,11 +1,13 @@
 import tkinter as tk
 from tkinter import ttk 
 
-#from login import check_credential
+from AdminLogin import check_credential
+from page_admin_view import AdminPage
     
 class AdminLoginPage(tk.Frame):
-    def __init__(self, parent, controller):
+    def __init__(self,prev, parent, controller):
         super().__init__(parent)
+        self.prev = prev
         self.parent,self.controller = parent, controller
         #Session Variables
         self.session_username = tk.StringVar()
@@ -55,7 +57,7 @@ class AdminLoginPage(tk.Frame):
         ent_login_password.pack()  
         
         ## Message display ## - Create but do not grid yet
-        self.lbl_msg_display = tk.Label(frm_login, text= "", bg="red")
+        self.lbl_msg_display = tk.Label(frm_login, text= "")
         
         #Login Button
         self.btn_login = tk.Button(frm_content, text="Login",width=10,height=1, borderwidth=2, 
@@ -75,7 +77,6 @@ class AdminLoginPage(tk.Frame):
         if (not self.lbl_msg_display.winfo_ismapped()):
             self.lbl_msg_display.pack(pady=(5,0))
             self.btn_login.pack_configure(pady=(5,0))
-        
         if (not self.check_input()): 
             return 
         #Inputs valid:
@@ -103,28 +104,28 @@ class AdminLoginPage(tk.Frame):
         usr_n, pw = self.session_username.get(), self.session_password.get()
         
         # Calls backend method - returns an integer 
-        #status = check_credential(usr_n,pw)
-        
-        """ TESTING ONLY """
-        status = 1
+        status = check_credential(usr_n,pw)
         
         ## Update Page based on status ##
         login_ok = False 
-        if status == 1: #ID and password match, Login ok
+        if status == "Login Successful": #ID and password match, Login ok
             self.lbl_msg_display.config(text="Login Sucessful", fg = "green")
             login_ok = True
-        elif status == 2: #ID match but wrong password
+        elif status == "Login Unsuccessful -- Incorrect Password": #ID match but wrong password
             self.lbl_msg_display.config(text="Incorrect Password. Please Try Again", fg = "red")
-        elif status == 3: #Invalid username
+        elif status == "User not found": #Invalid username
             self.lbl_msg_display.config(text="Invalid Username. Please Try Again", fg = "red")
+        else:
+            self.lbl_msg_display.config(text="ERROR", fg = "red")
         
         ## Process Sucessful Login ##
         #TODO: 
-        if login_ok: 
-            pass
-        # SIMPLE METHOD OF SETTING - PROBABLY NOT THE BEST SECURITY WISE #
-        #nextPage = self.controller.PAGES[1]
-        #self.controller.show_frame(nextPage)
+        if login_ok:
+            self.prev.destroy()
+            nextPage = AdminPage(self.parent,self.controller,{"userId": usr_n})
+            nextPage.grid(row=0, column=0, sticky="nsew")
+            self.destroy()
+            
             
 ## DEBUG USE ONLY ###              
 if __name__ == '__main__':
@@ -135,7 +136,8 @@ if __name__ == '__main__':
     container.pack(side = "top", fill = "both", expand = True) 
     container.grid_rowconfigure(0, weight = 1)
     container.grid_columnconfigure(0, weight = 1)
-    frame = AdminLoginPage(container,root)
+    x = tk.Frame(root)
+    frame = AdminLoginPage(x,container,root)
     frame.grid(row = 0, column = 0, sticky ="nsew")
     frame.tkraise()
     root.mainloop()  
