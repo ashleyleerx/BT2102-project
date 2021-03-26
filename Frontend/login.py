@@ -3,9 +3,6 @@ import pandas as pd
 import numpy as np
 from sqlalchemy import exc
 
-# Dataframe for MemberUser mySQL Relation Info
-user_df = pd.read_sql('memberuser', connect.db)
-
 """ 
 Function to create an account. Will ask user for 2 inputs 
 (functionality can be modified later depending on how the front end is like ), 
@@ -34,6 +31,8 @@ Cases:
 
 """
 def check_credential(ID, Password):
+    # Dataframe for MemberUser mySQL Relation Info
+    user_df = pd.read_sql('memberuser', connect.db) 
     for index, row in user_df.iterrows():
         if row["memberID"] == ID:
             if row["memberPassword"] == Password:

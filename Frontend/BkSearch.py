@@ -153,8 +153,6 @@ List of options for Filter:
     - "Authors" -- should take in a string of 1 + author/authors
 Extra param only applies for Pagecount, PublishedDate
 '''
-
-
 def advance_search(search_words, filt, *extra_param):
     match_dict = {}
 

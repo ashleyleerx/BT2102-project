@@ -3,10 +3,16 @@ import tkinter as tk
 from tkinter import OptionMenu, ttk
 from tkinter.constants import ACTIVE, DISABLED  # we will use this later on...
 from tkinter import messagebox
+import io
+from PIL import Image, ImageTk
+from urllib.request import urlopen
 import pandas as pd
 
 import BkSearch as bksearch
 import bookborrow as bkborrow
+
+# categories = [".NET", "Algorithmic Art", "Business", "Client Server", "Client-Server", "Computer Graph",
+#         "Computer Graphics", "In Action", "Internet", "Java", "Microsoft", "Microsoft .NET", "Microsoft/.NET", "Miscella", "Miscellaneous", "Mobile", "Mobile Technology", "Networking", "Next Generation Databases", "Object-Oriented Programming", "Object-Technology Programming", "Open Source", "P", "PHP", "Perl", "PowerBuilder", "Programming", "Python", "S", "SOA", "Software Development", "Software Engineering", "Theory", "Web Development", "XML", "internet", "java"]
 
 options = {"Title": [], "ISBN": [], 
            "Page Count": ["Lesser", "Equal", "Greater"],
@@ -36,6 +42,7 @@ class SearchDisplay(tk.Frame):
         self.treedata = tk.StringVar()
         
         # Book Details Display #
+        self.photos = {}
         self.bk_title = tk.StringVar()
         self.bk_author = tk.StringVar()
         self.bk_desc = tk.StringVar()
@@ -169,8 +176,8 @@ class SearchDisplay(tk.Frame):
         self.frm_bkdip = frm_bkdispl
         
         ### Picture Display ###
-        lbl_picture = tk.Canvas(frm_bkdispl, width = 120, height = 120,bg="pink")
-        lbl_picture.pack(side=tk.LEFT,padx=(0,5))
+        self.cnv_picture = tk.Canvas(frm_bkdispl, width = 120, height = 120,bg="white")
+        self.cnv_picture.pack(side=tk.LEFT,padx=(0,5))
 
         #### Book Details ###
         frm_bkdetails = tk.Frame(master=frm_bkdispl,bg="white",height=100,width=200)
@@ -274,23 +281,55 @@ class SearchDisplay(tk.Frame):
     def on_tree_select(self, event):            
         item = self.treeview1.selection()[0]
         vals = self.treeview1.item(item, 'values')
-        oVals = self.search_results.loc[int(vals[0]),:]
+        bk_id = int(vals[0])
+        oVals = self.search_results.loc[bk_id,:]
         
         #Show book details frame (if hidden)
         if not self.frm_bkdip.winfo_ismapped():
             self.frm_bkdip.grid()
         #Update the book details frame
+        self.load_book_thumb(bk_id,oVals[6])
         self.bk_title.set(vals[1])
         self.bk_author.set(oVals[4])
         self.bk_desc.set(oVals[5])
         #Update selection cursor
-        self.bk_selected_id = int(vals[0])
+        self.bk_selected_id = bk_id
         self.bk_selected_title = vals[1]
         if not oVals[3] == "NIL":
             self.bk_selected_due = oVals[3].strftime("%d/%m/%Y")
         print(self.bk_selected_due)
         #Update Buttons
         self.switch_button_states((vals[2],vals[3]))
+        
+    def load_book_thumb(self,book_id,url):
+        self.cnv_picture.delete("all")
+        has_picture = False
+        if url[:20] == "https://s3.amazonaws" :
+            if book_id not in self.photos:
+                print("Loading url...")
+                ## Load form URL
+                # open the web page picture and read it into a memory stream
+                # and convert to an image Tkinter can handle
+                try: 
+                    my_page = urlopen(url)
+                    # create an image file object
+                    my_picture = io.BytesIO(my_page.read())
+                    # use PIL to open image formats like .jpg  .png  .gif  etc.
+                    pil_img = Image.open(my_picture)
+                    pil_img = pil_img.resize((125,125))
+                    # convert to an image Tkinter can use
+                    self.photos[book_id] = ImageTk.PhotoImage(pil_img)
+                    self.cnv_picture.create_image(60, 60, image=self.photos[book_id], anchor=tk.CENTER)
+                    has_picture = True
+                except Exception as e: 
+                    print(e)
+            else: 
+                self.cnv_picture.create_image(60, 60, image=self.photos[book_id], anchor=tk.CENTER)
+
+        if not has_picture:
+            self.cnv_picture.create_text(60,60,font="Times 8 italic bold",anchor=tk.CENTER,
+                        text="No Thumbnail available")
+        
         
     def switch_button_states(self,status):
         if self.user_unpaid_fines:
@@ -400,7 +439,7 @@ class SearchDisplay(tk.Frame):
     def check_search_input(self):
         valid_input = False
         # Check search field
-        if self.search_text.get() == "":
+        if self.search_text.get() == "" and self.drop.get() != "Categories":
             self.lbl_msg_display.config(text="Fill in Search Request", fg="red")
         else:
             self.lbl_msg_display.config(text="", fg="green")
@@ -409,8 +448,9 @@ class SearchDisplay(tk.Frame):
 
     def search(self):
         search_words = self.search_text.get()
-        if search_words != "":
-            filt = self.drop.get()
+        filt = self.drop.get()
+        if search_words != "" or filt == "Categories":
+            
             if filt == "Title":
                 simple_search_dict = bksearch.simple_search(search_words)
                 return bksearch.similarity_sort(simple_search_dict, search_words, "title")

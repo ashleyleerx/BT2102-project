@@ -53,7 +53,4 @@ def get_new_due_date(book_id):
     query_stmt = "SELECT dateDue FROM book "
     query_stmt += "WHERE bookID = \"{}\" ORDER BY bookID".format(book_id)
     due_date = pd.read_sql_query(query_stmt, connect.db)
-    return str(due_date["dateDue"][0])     
-    
-
-    
+    return str(due_date["dateDue"][0])    

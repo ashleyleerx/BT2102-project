@@ -118,7 +118,7 @@ if __name__ == '__main__':
     container.grid_rowconfigure(0, weight = 1)
     container.grid_columnconfigure(0, weight = 1)
 
-    test_user = {"userId":"henrychia07"}
+    test_user = {"userId":"cc77"}
 
     frm_header_bar = MainPage(None,container,root,test_user)
     frm_header_bar.grid(row=0, column=0, sticky="nsew")

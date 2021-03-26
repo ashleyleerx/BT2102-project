@@ -37,7 +37,7 @@ class PaymentPage(tk.Frame):
         main_frame.columnconfigure(0, weight=1)
             
         #Payment screen    
-        payment_screen = tk.Frame(master=main_frame)
+        payment_screen = tk.Frame(master=main_frame,bg="pink")
         payment_screen.grid(row=0,column=0,sticky="nsew")
         df = gv.member_view_unpaidfines(self.user_name)
         self.fill_payment(df, payment_screen)
@@ -62,7 +62,7 @@ class PaymentPage(tk.Frame):
                 
     def fill_payment(self, df, frame):
         frm_fines = tk.Frame(master=frame, bg="white", borderwidth=1,relief=tk.GROOVE)
-        frm_fines.pack(side=tk.TOP)
+        frm_fines.pack(side=tk.TOP,fill=tk.BOTH,expand=True)
         ## Fines Table ##
         frm_fines_table = tk.Frame(master=frm_fines, bg = "white")
         frm_fines_table.pack(pady=(10,20),padx=40)
@@ -78,7 +78,6 @@ class PaymentPage(tk.Frame):
         lbl_amt.grid(row=0,column=1,padx=20,pady=7)
         #Making individual rows - Assume: index < 4 
         for index, row in df.iterrows():
-            print(index)
             #Book data
             lbl_date = tk.Label(master=frm_fines_table,text=row[0],
                                  width = 10, font=('', 15),bg = "white")
@@ -91,7 +90,7 @@ class PaymentPage(tk.Frame):
         total_label = tk.Label(master=frm_fines, 
                                text = "Total Fine: $" + str(self.user_fines.get()),
                                bg = "white",foreground="red", font=('', 20))
-        total_label.pack()
+        total_label.pack(side=tk.BOTTOM)
         
     ## UI Event Helpers ##
     def on_cancel_button_press(self):
@@ -111,18 +110,19 @@ class PaymentPage(tk.Frame):
             self.destroy()
             self.controller.refresh_home()
         
-# root = tk.Tk()
+if __name__ == '__main__':
+    root = tk.Tk()
 
-# root.geometry('600x600')
-# root.minsize(600,600)
-# container = tk.Frame(root)
-# container.pack(side = "top", fill = "both", expand = True) 
-# container.grid_rowconfigure(0, weight = 1)
-# container.grid_columnconfigure(0, weight = 1)
+    root.geometry('600x600')
+    root.minsize(600,600)
+    container = tk.Frame(root)
+    container.pack(side = "top", fill = "both", expand = True) 
+    container.grid_rowconfigure(0, weight = 1)
+    container.grid_columnconfigure(0, weight = 1)
 
-# test_user = {"userId":"willywonka69"}
+    test_user = {"userId":"willywonka69"}
 
-# frame = PaymentPage(container,root,test_user)
-# frame.grid(row = 0, column = 0, sticky ="nsew")
-# frame.tkraise()
-# root.mainloop()  
+    frame = PaymentPage(container,root,test_user)
+    frame.grid(row = 0, column = 0, sticky ="nsew")
+    frame.tkraise()
+    root.mainloop()  

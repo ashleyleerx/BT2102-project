@@ -37,8 +37,6 @@ def check_status(bookID):
     else:
         return False
     
-
-
 def return_book(bookID, memberID):
     borrowerID = result("SELECT borrowMemberID FROM book WHERE bookID = {}".format(bookID))
     if borrowerID == memberID:
